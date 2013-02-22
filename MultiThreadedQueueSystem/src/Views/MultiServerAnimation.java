@@ -26,6 +26,10 @@ import de.Server;
 
 public class MultiServerAnimation extends JFrame implements Observer{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel panel;
 	public Vector<JPanel> panelVector;
 	public Insets panelInsets;
@@ -56,7 +60,7 @@ public class MultiServerAnimation extends JFrame implements Observer{
 		queuepanel = new JPanel();
 		queuepanel.setSize(100,30);
 		this.panel.add(queuepanel);
-		queuepanel.setBounds(100, panel.getHeight()/2 - 50, 100, 60);
+		queuepanel.setBounds(100, panel.getHeight()/2 + 250, 100, 60);
 		queuepanel.setBackground(Color.magenta);
 		Border b = BorderFactory.createBevelBorder(0);
 		queuepanel.setBorder(b);	
@@ -73,7 +77,7 @@ public class MultiServerAnimation extends JFrame implements Observer{
 		
 		jlabelArray = new JLabel[MainController.numberOfServers];
 		for(int i = 0; i < jlabelArray.length; i++ ){
-			jlabelArray[i] = null;
+			jlabelArray[i] = new JLabel(image);
 		}
 	}
 	
@@ -88,53 +92,55 @@ public class MultiServerAnimation extends JFrame implements Observer{
 		if(o instanceof Server){
 			if(arg.equals(false)){
 				server = ((Server)o).getServerId();
-				Runnable x = new Runnable(){
-
-					 
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-						JLabel jl = new JLabel(image);
-						jlabelArray[server] = jl;
-						panel.add(jl);
-						jl.setVisible(false);
-						jl.setBounds(queuepanel.getX(), queuepanel.getX(), image.getIconWidth(), image.getIconHeight());
-						Rectangle b = panelVector.get(server).getBounds();
-						
-						for(int i = 0; i < 20; i++){
-						jl.setVisible(true);
-						jl.setLocation(i*(b.getLocation().x-queuepanel.getX())/20 + queuepanel.getX(),i*(b.getLocation().y-queuepanel.getY())/20 + queuepanel.getY());
-						try {
-							
-							Thread.sleep(9);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						}
-						panelVector.get(server).setBackground(Color.gray);
-						
-					}
-					
-				};
-				
-				x.run();
-			
+				runny();
+				return;
 			}
 			else if(arg.equals(true)){
 				int server = ((Server)o).getServerId();	
-				panelVector.get(((Server)o).getServerId()).setBackground(Color.red);
-				if(jlabelArray[server] != null){	
-				jlabelArray[server].setLocation(10000,10000);
-				jlabelArray[server].repaint();
-				jlabelArray[server].setVisible(false);
-				panel.remove(jlabelArray[server]);
-				jlabelArray[server].repaint();
-				panel.repaint();
-				jlabelArray[server]= null;
+				JLabel x = jlabelArray[server];
+				panelVector.get(server).setBackground(Color.pink);
+				if(x != null){	
+				x.setVisible(false);
+				x.revalidate();
+				panel.remove(x);
+				x.revalidate();
+				panel.revalidate();
 				}
 			}
 		}
 		
+	}
+
+	private void runny() {
+		Runnable x = new Runnable(){
+
+			 
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				JLabel jl = jlabelArray[server];
+				panel.add(jl);
+				jl.setVisible(false);
+				jl.setBounds(queuepanel.getX(), queuepanel.getX(), image.getIconWidth(), image.getIconHeight());
+				Rectangle b = panelVector.get(server).getBounds();
+				
+				for(int i = 0; i < 15; i++){
+				jl.setVisible(true);
+				jl.setLocation(i*(b.getLocation().x-queuepanel.getX())/15 + queuepanel.getX(),i*(b.getLocation().y-queuepanel.getY())/15 + queuepanel.getY());
+				try {
+					
+					Thread.sleep(23);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				}
+				panelVector.get(server).setBackground(Color.gray);
+				
+			}
+			
+		};
+		
+		x.run();
 	}
 }

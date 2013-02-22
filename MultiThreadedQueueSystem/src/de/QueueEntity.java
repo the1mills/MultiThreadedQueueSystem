@@ -2,6 +2,25 @@ package de;
 
 public class QueueEntity {
 	
+	private boolean inService;
+	private boolean inQueue;
+	private boolean served = false;
+	private double timeArrivedAtQueue;
+	private double timeReachedService;
+	private double timeServed;
+	private double totalWaitingTime;
+	private double totalServerTime;
+	private double totalTime;
+	private int numberOfItemsInQueueEntity;
+
+	
+	public QueueEntity(double timeArrivedAtQueue, int numberOfItemsInQueueEntity){
+		
+		this.timeArrivedAtQueue = timeArrivedAtQueue;
+		this.numberOfItemsInQueueEntity = numberOfItemsInQueueEntity;
+		
+	}
+	
 	public synchronized double getTimeArrivedAtQueue() {
 		return timeArrivedAtQueue;
 	}
@@ -103,22 +122,5 @@ public class QueueEntity {
 	}
 
 
-	private boolean inService;
-	private boolean inQueue;
-	private boolean served = false;
-	private double timeArrivedAtQueue;
-	private double timeReachedService;
-	private double timeServed;
-	private double totalWaitingTime;
-	private double totalServerTime;
-	private double totalTime;
-	private int numberOfItemsInQueueEntity;
-
 	
-	public QueueEntity(double timeArrivedAtQueue, int numberOfItemsInQueueEntity){
-		
-		this.timeArrivedAtQueue = timeArrivedAtQueue;
-		this.numberOfItemsInQueueEntity = numberOfItemsInQueueEntity;
-		
-	}
 }

@@ -5,13 +5,22 @@ import java.util.Observable;
 public class Server extends Observable implements Runnable {
 
 
-	private MainController mc;
+//	private MainController mc;
 	private Integer serverId;
 	private boolean keepLooping = true;
 	private QueueEntity qe;
 	private boolean idle = true;
 	private double totalIdleTime = 0;
 	private double idleTimeStart = System.nanoTime()/1000000;
+	
+	
+	public Server(Integer i) {
+
+		this.serverId = i;
+		this.addObserver(MainController.msa);
+		this.addObserver(MainController.stats);
+	}
+
 	
 	public synchronized Integer getServerId() {
 		return serverId;
@@ -26,8 +35,10 @@ public class Server extends Observable implements Runnable {
 
 	public synchronized void setIdle(boolean idle) {
 		this.idle = idle;
+		
 		this.setChanged();
 		this.notifyObservers(idle);
+		
 	}
 
 	public synchronized double getTotalIdleTime() {
@@ -54,13 +65,6 @@ public class Server extends Observable implements Runnable {
 		this.qe = qe;
 	}
 
-	public MainController getMc() {
-		return mc;
-	}
-
-	public void setMc(MainController mc) {
-		this.mc = mc;
-	}
 
 	public boolean isKeepLooping() {
 		return keepLooping;
@@ -70,20 +74,13 @@ public class Server extends Observable implements Runnable {
 		this.keepLooping = keepLooping;
 	}
 
-	public Server(MainController mc, Integer i) {
-
-		this.mc = mc;
-		this.serverId = i;
-		this.addObserver(MainController.msa);
-		this.addObserver(MainController.stats);
-	}
-
+	
 
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
 
-		while (this.getMc().isKeepLooping()) {
+		while (MainController.isKeepLooping()) {
 			loop();
 		}
 	}
@@ -91,7 +88,7 @@ public class Server extends Observable implements Runnable {
 	private void loop() {
 
 		
-		qe = this.getMc().getFirstItem();
+		qe = MainController.getFirstItem();
 		if(qe == null){
 			this.setIdle(true);
 			double timeNow = System.nanoTime()/1000000;
@@ -112,14 +109,14 @@ public class Server extends Observable implements Runnable {
 		qe.setTotalServerTime(System.nanoTime()/1000000 - qe.getTimeReachedService());
 		qe.setInService(false);
 		qe.setServed(true);
-		this.getMc().getServedEntities().add(qe);
-		this.getMc().setNumberThroughQueue(this.getMc().getNumberThroughQueue()+1);
-		System.out.println(this.getMc().getNumberThroughQueue());
-		if(this.getMc().getNumberThroughQueue() >= this.getMc().getNumberOutLimit()){
-			this.getMc().setKeepLooping(false);
+		MainController.getServedEntities().add(qe);
+		MainController.setNumberThroughQueue(MainController.getNumberThroughQueue()+1);
+		System.out.println(MainController.getNumberThroughQueue());
+		if(MainController.getNumberThroughQueue() >= MainController.getNumberOutLimit()){
+			MainController.setKeepLooping(false);
 		}
 
 		System.out.println("Number in queue (service): "
-				+ this.getMc().getQueue().getQueue().size());
+				+ MainController.getQueue().getQueue().size());
 	}
 }

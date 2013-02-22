@@ -33,8 +33,10 @@ public class Queue implements Runnable {
 
 	private void loop() {
 
+		//here is the arrival process
+		
 		double timeTilNextArrival = GenerateRandomVariates
-				.generateExponentialRandomVariable(1200);
+				.generateExponentialRandomVariable(700);
 		int numberInGroup = GenerateRandomVariates.getNextGroupSize();
 
 		try {

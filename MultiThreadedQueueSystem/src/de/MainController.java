@@ -5,7 +5,7 @@ import Views.MultiServerAnimation;
 
 public class MainController {
 	
-	public static int numberOfServers = 7;
+	public static int numberOfServers = 12;
 	public static volatile Vector<Server> serverVector;
 	public static volatile Vector<Thread> serverThreadVector;
 	public static volatile Thread queueThread;
@@ -17,45 +17,45 @@ public class MainController {
 	public static MultiServerAnimation msa = null;
 	public static Stats stats = null;
 	
-	public synchronized boolean isKeepLooping() {
+	public synchronized static boolean isKeepLooping() {
 		return keepLooping;
 	}
 
-	public synchronized void setKeepLooping(boolean keepLooping) {
-		this.keepLooping = keepLooping;
+	public synchronized static void setKeepLooping(boolean keepLooping) {
+		MainController.keepLooping = keepLooping;
 	}
 
-	public synchronized Integer getNumberThroughQueue() {
+	public synchronized static Integer getNumberThroughQueue() {
 		return numberThroughQueue;
 	}
 
-	public synchronized void setNumberThroughQueue(Integer numberThroughQueue) {
-		this.numberThroughQueue = numberThroughQueue;
+	public synchronized static void setNumberThroughQueue(Integer numberThroughQueue) {
+		MainController.numberThroughQueue = numberThroughQueue;
 	}
 	
-	public Integer getNumberOutLimit() {
+	public static Integer getNumberOutLimit() {
 		return numberOutLimit;
 	}
 
 	public void setNumberOutLimit(Integer numberOutLimit) {
-		this.numberOutLimit = numberOutLimit;
+		MainController.numberOutLimit = numberOutLimit;
 	}
 	
-	public synchronized Vector<QueueEntity> getServedEntities() {
+	public synchronized static Vector<QueueEntity> getServedEntities() {
 		return servedEntities;
 	}
 
 	public synchronized void setServedEntities(Vector<QueueEntity> servedEntities) {
-		this.servedEntities = servedEntities;
+		MainController.servedEntities = servedEntities;
 	}
 	
-	public synchronized QueueEntity getFirstItem(){
-		if(this.getQueue().getQueue().size() > 0){
-		QueueEntity	qe = this.getQueue().getQueue().get(0);
+	public synchronized static QueueEntity getFirstItem(){
+		if(MainController.getQueue().getQueue().size() > 0){
+		QueueEntity	qe = MainController.getQueue().getQueue().get(0);
 		qe.setTimeReachedService(System.nanoTime()/1000000);
 		qe.setInQueue(false);
 		qe.setInService(true);
-		this.getQueue().getQueue().remove(qe);
+		MainController.getQueue().getQueue().remove(qe);
 		return qe;
 		}
 		else{
@@ -81,7 +81,7 @@ public class MainController {
 
 		for (Integer i = 0; i < numberOfServers; i++) {
 
-			this.getServerVector().add(new Server(this,i));
+			this.getServerVector().add(new Server(i));
 			this.getServerThreadVector().add(
 					new Thread(this.getServerVector().get(i)));
 
@@ -102,7 +102,7 @@ public class MainController {
 	}
 
 	public void setNumberOfServers(int numberOfServers) {
-		this.numberOfServers = numberOfServers;
+		MainController.numberOfServers = numberOfServers;
 	}
 
 	public synchronized Vector<Server> getServerVector() {
@@ -115,11 +115,11 @@ public class MainController {
 
 	public synchronized void setServerThreadVector(
 			Vector<Thread> serverThreadVector) {
-		this.serverThreadVector = serverThreadVector;
+		MainController.serverThreadVector = serverThreadVector;
 	}
 
 	public synchronized void setServerVector(Vector<Server> serverVector) {
-		this.serverVector = serverVector;
+		MainController.serverVector = serverVector;
 	}
 
 	public synchronized Thread getQueueThread() {
@@ -127,15 +127,15 @@ public class MainController {
 	}
 
 	public synchronized void setQueueThread(Thread queueThread) {
-		this.queueThread = queueThread;
+		MainController.queueThread = queueThread;
 	}
 
-	public synchronized Queue getQueue() {
+	public synchronized static Queue getQueue() {
 		return queue;
 	}
 
 	public synchronized void setQueue(Queue queue) {
-		this.queue = queue;
+		MainController.queue = queue;
 	}
 
 }
